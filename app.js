@@ -31,7 +31,9 @@ app.get('/', (req, res) => {
     }
 });
 
-setTimeout(() => {
+setTimeout(() => update(), 1000 * 60 * 60 * 2);
+
+const update = () => {
     https.get(itemsPath, function(res){
         let body = '';
 
@@ -41,14 +43,14 @@ setTimeout(() => {
 
         res.on('end', function(){
             items = JSON.parse(body);
-            console.log(items)
             console.log("Got " + items.length + " items.")
         });
     }).on('error', function(e){
         console.log("Got an error while grabbing files: ", e);
         process.exit(1);
     });
-}, 1000 * 60 * 60 * 2);
+};
 
+update();
 app.listen(3001);
 
