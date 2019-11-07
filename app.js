@@ -3,11 +3,12 @@ const app = express();
 const path = require('path');
 const device = require('express-device');
 const https = require('https');
+const xss = require('xss');
 
 let items = [];
 const itemsPath = "https://raw.githubusercontent.com/Connect-To-Care/items/master/items.json";
 
-const exphbs  = require('express-handlebars');
+const exphbs = require('express-handlebars');
 
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
@@ -34,18 +35,23 @@ app.get('/', (req, res) => {
 setTimeout(() => update(), 1000 * 60 * 60 * 2);
 
 const update = () => {
-    https.get(itemsPath, function(res){
+    https.get(itemsPath, function (res) {
         let body = '';
 
-        res.on('data', function(chunk){
+        res.on('data', function (chunk) {
             body += chunk;
         });
 
-        res.on('end', function(){
-            items = JSON.parse(body);
+        res.on('end', function () {
+            items = JSON.parse(body).map(item => {
+                return {
+                    name: xss(item.name),
+                    img: xss(item.img)
+                }
+            });
             console.log("Got " + items.length + " items.")
         });
-    }).on('error', function(e){
+    }).on('error', function (e) {
         console.log("Got an error while grabbing files: ", e);
         process.exit(1);
     });
