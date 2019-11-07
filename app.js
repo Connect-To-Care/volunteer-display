@@ -31,22 +31,24 @@ app.get('/', (req, res) => {
     }
 });
 
-https.get(itemsPath, function(res){
-    let body = '';
+setTimeout(() => {
+    https.get(itemsPath, function(res){
+        let body = '';
 
-    res.on('data', function(chunk){
-        body += chunk;
-    });
+        res.on('data', function(chunk){
+            body += chunk;
+        });
 
-    res.on('end', function(){
-        items = JSON.parse(body);
-        console.log(items)
-        console.log("Got " + items.length + " items.")
+        res.on('end', function(){
+            items = JSON.parse(body);
+            console.log(items)
+            console.log("Got " + items.length + " items.")
+        });
+    }).on('error', function(e){
+        console.log("Got an error while grabbing files: ", e);
+        process.exit(1);
     });
-}).on('error', function(e){
-    console.log("Got an error while grabbing files: ", e);
-    process.exit(1);
-});
+}, 1000 * 60 * 60 * 2)
 
 app.listen(8080);
 
