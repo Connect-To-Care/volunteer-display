@@ -1,0 +1,10 @@
+version: "3"
+services:
+  back_app:
+    restart: always
+    build: .
+    ports:
+      - "8081:3001"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules

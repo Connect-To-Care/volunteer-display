@@ -48,7 +48,7 @@ setTimeout(() => {
         console.log("Got an error while grabbing files: ", e);
         process.exit(1);
     });
-}, 1000 * 60 * 60 * 2)
+}, 1000 * 60 * 60 * 2);
 
-app.listen(8080);
+app.listen(3001);
 
